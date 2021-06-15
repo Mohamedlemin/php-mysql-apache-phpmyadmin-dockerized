@@ -1,15 +1,5 @@
 version: "3.2"
 services:
-  projetcloud:
-    image: attente
-    depends_on:
-      - php
-      - apache
-      - mysql
-      - phpmyadmin
-    networks:
-      - frontend
-      - backend
   php:
     build:
       context: "./php/"
