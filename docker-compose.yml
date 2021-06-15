@@ -2,7 +2,7 @@ version: "3.2"
 services:
   php:
     build:
-      context: "./php/"
+      context: "./apache/"
       args:
         PHP_VERSION: ${PHP_VERSION}
     networks:
