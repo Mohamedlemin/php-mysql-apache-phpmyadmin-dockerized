@@ -1,22 +1,32 @@
 version: "3.2"
 services:
+  projetcloud:
+    image: attente
+    depends_on:
+      - php
+      - apache
+      - mysql
+      - phpmyadmin
+    networks:
+      - frontend
+      - backend
   php:
-    build: 
-      context: './php/'
+    build:
+      context: "./php/"
       args:
-       PHP_VERSION: ${PHP_VERSION}
+        PHP_VERSION: ${PHP_VERSION}
     networks:
       - backend
     volumes:
       - ${PROJECT_ROOT}/:/var/www/html/
     container_name: php
     links:
-     - mysql
+      - mysql
   apache:
     build:
-      context: './apache/'
+      context: "./apache/"
       args:
-       APACHE_VERSION: ${APACHE_VERSION}
+        APACHE_VERSION: ${APACHE_VERSION}
     depends_on:
       - php
       - mysql
@@ -31,8 +41,9 @@ services:
       - ${PROJECT_ROOT}/:/var/www/html/
     container_name: apache
   mysql:
+    platform: linux/x86_64
     image: mysql:${MYSQL_VERSION}
-    command: --default-authentication-plugin=mysql_native_password 
+    command: --default-authentication-plugin=mysql_native_password
     restart: always
     ports:
       - "3306:3306"
@@ -40,8 +51,8 @@ services:
       - data:/var/lib/mysql
     networks:
       - backend
-  # The default MySQL installation only creates the "root" administrative account
-  # create new users using docker-compose exec
+    # The default MySQL installation only creates the "root" administrative account
+    # create new users using docker-compose exec
     environment:
       MYSQL_ROOT_PASSWORD: "${DB_ROOT_PASSWORD}"
       MYSQL_DATABASE: "${DB_NAME}"
@@ -56,11 +67,11 @@ services:
     image: phpmyadmin/phpmyadmin
     restart: always
     ports:
-      - '8081:80'
+      - "8081:80"
     environment:
       PMA_HOST: mysql
       MYSQL_USERNAME: "${DB_USERNAME}"
-      MYSQL_ROOT_PASSWORD: "${DB_ROOT_PASSWORD}"   
+      MYSQL_ROOT_PASSWORD: "${DB_ROOT_PASSWORD}"
     networks:
       - backend
     volumes:
@@ -70,4 +81,4 @@ networks:
   frontend:
   backend:
 volumes:
-    data:
+  data:
